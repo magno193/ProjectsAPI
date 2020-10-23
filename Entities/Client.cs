@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using API.Enums;
 
 namespace API.Entities
@@ -26,9 +28,20 @@ namespace API.Entities
       ExpectedDate = expectedDate;
       Active = ActiveEnum.Ativo;
     }
+
+    [Key]
     public Guid Id { get; private set; }
+
+    [StringLength(200)]
     public string Name { get; private set; }
+
+    [StringLength(500)]
+    public string Description { get; private set; }
+
+    [StringLength(16)]
     public string Phone { get; private set; }
+
+    [StringLength(150)]
     public string Email { get; private set; }
     public List<Project> Projects { get; private set; }
     public DateTime StartDate { get; private set; }
