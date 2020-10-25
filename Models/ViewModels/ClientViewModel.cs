@@ -1,7 +1,7 @@
 using System;
 using API.Enums;
 
-namespace API.ViewModels
+namespace API.Models.ViewModels
 {
   public class ClientViewModel
   {

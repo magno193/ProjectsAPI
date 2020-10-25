@@ -1,4 +1,5 @@
 using API.Entities;
+using API.Persistence.Configurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Persistence
@@ -13,17 +14,8 @@ namespace API.Persistence
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-      modelBuilder.Entity<Project>()
-        .HasMany(p => p.Payments)
-        .WithOne(p => p.Project)
-        .HasForeignKey(p => p.IdProject)
-        .OnDelete(DeleteBehavior.Restrict);
-
-      modelBuilder.Entity<Client>()
-        .HasMany(p => p.Projects)
-        .WithOne(c => c.Client)
-        .HasForeignKey(c => c.IdClient)
-        .OnDelete(DeleteBehavior.Restrict);
+      modelBuilder.ApplyConfiguration(new ClientConfiguration());
+      modelBuilder.ApplyConfiguration(new ProjectConfiguration());
     }
 
   }

@@ -1,6 +1,6 @@
 using API.Enums;
 
-namespace API.InputModels
+namespace API.Models.InputModels
 {
   public class ClientUpdateInputModel
   {
