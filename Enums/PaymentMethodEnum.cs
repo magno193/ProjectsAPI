@@ -1,6 +1,6 @@
 namespace API.Enums
 {
-  public enum MethodEnum
+  public enum PaymentMethodEnum
   {
     Dinheiro = 0,
     Crédito = 1,

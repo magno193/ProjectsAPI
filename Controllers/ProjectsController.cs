@@ -26,9 +26,10 @@ namespace API.Controllers
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> Get(Guid id)
+    public async Task<IActionResult> GetById(Guid id)
     {
       var project = await _apiContext.Projects.SingleOrDefaultAsync(p => p.Id == id);
+      if (project == null) throw new Exception("Projeto não encontrado");
       return Ok(project);
     }
 
@@ -38,23 +39,34 @@ namespace API.Controllers
       _apiContext.Projects.Add(request);
       var success = await _apiContext.SaveChangesAsync() > 0;
 
-      if (success) return CreatedAtAction(nameof(List), request, new { id = request.Id });
+      if (success) return CreatedAtAction(nameof(GetById), request, new { id = request.Id });
       throw new Exception("Ocorreu um problema ao salvar os dados");
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> Put(Guid id, [FromBody] Project request)
     {
-      var findProject = await _apiContext.Projects.FindAsync(id);
-      if (findProject == null) throw new Exception("Projeto não encontrado");
+      var project = await _apiContext.Projects.FindAsync(id);
+      if (project == null) throw new Exception("Projeto não encontrado");
 
-      return Ok();
+      _apiContext.Entry(request).State = EntityState.Modified;
+      var success = await _apiContext.SaveChangesAsync() > 0;
+
+      if (success) return NoContent();
+      throw new Exception("Ocorreu um problema ao salvar os dados");
     }
 
     [HttpDelete("{id}")]
-    public IActionResult Delete(Guid id)
+    public async Task<IActionResult> SoftDelete(Guid id)
     {
-      return Ok();
+      var project = await _apiContext.Projects.SingleOrDefaultAsync(p => p.Id == id);
+      if (project == null) throw new Exception("Projeto não encontrado");
+
+      project.ToInactive();
+      var success = await _apiContext.SaveChangesAsync() > 0;
+
+      if (success) return NoContent();
+      throw new Exception("Ocorreu um problema ao salvar os dados");
     }
   }
 }

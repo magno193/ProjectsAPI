@@ -13,19 +13,16 @@ namespace API.Entities
     public Client(
       string name,
       string phone,
-      string email,
-      DateTime startDate,
-      DateTime endDate,
-      DateTime expectedDate
+      string description,
+      string email
     )
     {
       Name = name;
       Phone = phone;
       Email = email;
+      Description = description;
+      TotalPayment = 0;
       Projects = new List<Project>();
-      StartDate = startDate;
-      EndDate = endDate;
-      ExpectedDate = expectedDate;
       Active = ActiveEnum.Ativo;
     }
 
@@ -43,10 +40,20 @@ namespace API.Entities
 
     [StringLength(150)]
     public string Email { get; private set; }
+
+    [Column(TypeName = ("decimal(9,2)"))]
+    public decimal TotalPayment { get; private set; }
     public List<Project> Projects { get; private set; }
-    public DateTime StartDate { get; private set; }
-    public DateTime EndDate { get; private set; }
-    public DateTime ExpectedDate { get; private set; }
     public ActiveEnum Active { get; private set; }
+
+    public void ToInactive()
+    {
+      if (Active != ActiveEnum.Ativo)
+      {
+        throw new Exception("Estado inválido.");
+      }
+
+      Active = ActiveEnum.Inativo;
+    }
   }
 }

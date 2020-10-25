@@ -26,14 +26,24 @@ namespace API.Entities
 
     [Column(TypeName = "decimal(9, 2)")]
     public decimal Value { get; private set; }
-    public MethodEnum Method { get; private set; }
+    public PaymentMethodEnum PaymentMethod { get; private set; }
     public Boolean? Portion { get; private set; }
 
     [Column(TypeName = "tinyint")]
     public int? Quantity { get; private set; }
     public DateTime PaymentDate { get; private set; }
-
+    public ActiveEnum Active { get; private set; }
     public Guid IdProject { get; private set; }
     public Project Project { get; private set; }
+
+    public void ToInactive()
+    {
+      if (Active != ActiveEnum.Ativo)
+      {
+        throw new Exception("Estado inválido.");
+      }
+
+      Active = ActiveEnum.Inativo;
+    }
   }
 }

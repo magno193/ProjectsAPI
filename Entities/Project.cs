@@ -13,7 +13,7 @@ namespace API.Entities
     public Project(
       string name,
       decimal budget,
-      decimal hoursWorked,
+      int hoursWorked,
       DateTime startDate,
       DateTime endDate,
       DateTime expectedDate
@@ -27,31 +27,41 @@ namespace API.Entities
       EndDate = endDate;
       ExpectedDate = expectedDate;
       Active = ActiveEnum.Ativo;
-      Status = StatusEnum.EmEspera;
+      Status = StatusEnum.Pendente;
     }
 
     [Key]
     public Guid Id { get; private set; }
 
     [StringLength(200)]
-    public string Name { get; set; }
+    public string Name { get; private set; }
 
     [StringLength(1000)]
-    public string Description { get; set; }
+    public string Description { get; private set; }
 
     [Column(TypeName = ("decimal(9,2)"))]
-    public decimal Budget { get; set; }
-    public List<Payment> Payments { get; set; }
+    public decimal Budget { get; private set; }
+    public List<Payment> Payments { get; private set; }
 
-    [Column("decimal(5,2)")]
-    public decimal HoursWorked { get; set; }
-    public DateTime StartDate { get; set; }
-    public DateTime EndDate { get; set; }
-    public DateTime ExpectedDate { get; set; }
-    public StatusEnum Status { get; set; }
-    public ActiveEnum Active { get; set; }
+    [Column(TypeName = "tinyint")]
+    public int HoursWorked { get; private set; }
+    public DateTime StartDate { get; private set; }
+    public DateTime EndDate { get; private set; }
+    public DateTime ExpectedDate { get; private set; }
+    public StatusEnum Status { get; private set; }
+    public ActiveEnum Active { get; private set; }
 
     public Guid IdClient { get; set; }
     public Client Client { get; set; }
+
+    public void ToInactive()
+    {
+      if (Active != ActiveEnum.Ativo)
+      {
+        throw new Exception("Estado inválido.");
+      }
+
+      Active = ActiveEnum.Inativo;
+    }
   }
 }

@@ -18,7 +18,7 @@ namespace API.Controllers
     }
 
     [HttpGet]
-    public async Task<IActionResult> List()
+    public async Task<IActionResult> GetAll()
     {
       var payments = await _apiContext.Payments.ToListAsync();
 
@@ -26,9 +26,10 @@ namespace API.Controllers
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> Get(Guid id)
+    public async Task<IActionResult> GetById(Guid id)
     {
       var payment = await _apiContext.Payments.SingleOrDefaultAsync(p => p.Id == id);
+      if (payment == null) throw new Exception("Pagamento não encontrado");
       return Ok(payment);
     }
 
@@ -38,9 +39,33 @@ namespace API.Controllers
       _apiContext.Payments.Add(request);
       var success = await _apiContext.SaveChangesAsync() > 0;
 
-      if (success) return CreatedAtAction(nameof(List), request, new { id = request.Id });
+      if (success) return CreatedAtAction(nameof(GetById), request, new { id = request.Id });
       throw new Exception("Ocorreu um problema ao salvar os dados");
     }
 
+    public async Task<IActionResult> Put(Guid id, [FromBody] Payment request)
+    {
+      var payment = await _apiContext.Payments.FindAsync(id);
+      if (payment == null) throw new Exception("Pagamento não encontrado");
+
+      _apiContext.Entry(request).State = EntityState.Modified;
+      var success = await _apiContext.SaveChangesAsync() > 0;
+
+      if (success) return NoContent();
+      throw new Exception("Ocorreu um problema ao salvar os dados");
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> SoftDelete(Guid id)
+    {
+      var payment = await _apiContext.Payments.SingleOrDefaultAsync(p => p.Id == id);
+      if (payment == null) throw new Exception("Pagamento não encontrado");
+
+      payment.ToInactive();
+      var success = await _apiContext.SaveChangesAsync() > 0;
+
+      if (success) return NoContent();
+      throw new Exception("Ocorreu um problema ao salvar os dados");
+    }
   }
 }
