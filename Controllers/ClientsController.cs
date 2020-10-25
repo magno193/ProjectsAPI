@@ -3,9 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Entities;
 using API.Enums;
-using API.InputModels;
+using API.Models.InputModels;
+using API.Models.ViewModels;
 using API.Persistence;
-using API.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

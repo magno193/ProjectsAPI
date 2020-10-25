@@ -9,21 +9,15 @@ namespace API.Entities
   public class Project
   {
     protected Project() { }
-    public Project(Guid id, string name, string description, decimal budget, List<Payment> payments, int hoursWorked, DateTime startDate, DateTime endDate, DateTime expectedDate, StatusEnum status, ActiveEnum active, Guid idClient, Client client)
+    public Project(string name, string description, decimal budget, Guid idClient)
     {
-      Id = id;
       Name = name;
       Description = description;
       Budget = budget;
-      Payments = payments;
-      HoursWorked = hoursWorked;
-      StartDate = startDate;
-      EndDate = endDate;
-      ExpectedDate = expectedDate;
-      Status = status;
+      HoursWorked = 0;
+      Status = StatusEnum.Pendente;
       Active = ActiveEnum.Ativo;
       IdClient = idClient;
-      Client = client;
     }
 
     [Key]
@@ -58,6 +52,25 @@ namespace API.Entities
       }
 
       Active = ActiveEnum.Inativo;
+    }
+
+    public void InputUpdate(
+      string name,
+      string description,
+      int hoursWorked,
+      StatusEnum status,
+      DateTime startDate,
+      DateTime endDate,
+      DateTime expectedDate
+    )
+    {
+      Name = name ?? Name;
+      Description = description ?? Description;
+      HoursWorked = hoursWorked | HoursWorked;
+      Status = status | Status;
+      StartDate = startDate;
+      EndDate = endDate;
+      ExpectedDate = expectedDate;
     }
   }
 }

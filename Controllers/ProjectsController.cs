@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using API.Entities;
+using API.Models.InputModels;
 using API.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -34,22 +35,36 @@ namespace API.Controllers
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] Project request)
+    public async Task<IActionResult> Post([FromBody] ProjectInputModel request)
     {
-      _apiContext.Projects.Add(request);
+      var project = new Project(
+        name: request.Name,
+        description: request.Description,
+        budget: request.Budget,
+        idClient: request.IdClient
+      );
+      _apiContext.Projects.Add(project);
       var success = await _apiContext.SaveChangesAsync() > 0;
 
-      if (success) return CreatedAtAction(nameof(GetById), request, new { id = request.Id });
+      if (success) return CreatedAtAction(nameof(GetById), project, new { id = project.Id });
       throw new Exception("Ocorreu um problema ao salvar os dados");
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Put(Guid id, [FromBody] Project request)
+    public async Task<IActionResult> Put(Guid id, [FromBody] ProjectUpdateInputModel request)
     {
       var project = await _apiContext.Projects.FindAsync(id);
       if (project == null) throw new Exception("Projeto não encontrado");
 
-      _apiContext.Entry(request).State = EntityState.Modified;
+      project.InputUpdate(
+        name: request.Name,
+        description: request.Description,
+        hoursWorked: request.HoursWorked,
+        status: request.Status,
+        startDate: request.StartDate,
+        endDate: request.EndDate,
+        expectedDate: request.ExpectedDate
+      );
       var success = await _apiContext.SaveChangesAsync() > 0;
 
       if (success) return NoContent();
