@@ -34,6 +34,8 @@ namespace API.Entities
     public int? Quantity { get; private set; }
     public DateTime PaymentDate { get; private set; }
     public ActiveEnum Active { get; private set; }
+
+    [ForeignKey(name: "Project")]
     public Guid IdProject { get; private set; }
     public Project Project { get; private set; }
 

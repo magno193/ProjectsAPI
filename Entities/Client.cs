@@ -18,6 +18,7 @@ namespace API.Entities
       Email = email;
       TotalPayment = totalPayment;
       Active = ActiveEnum.Ativo;
+      Projects = new List<Project>();
     }
 
     [Key]
@@ -37,7 +38,7 @@ namespace API.Entities
 
     [Column(TypeName = ("decimal(9,2)"))]
     public decimal TotalPayment { get; private set; }
-    public List<Project> Projects { get; private set; }
+    public ICollection<Project> Projects { get; private set; }
     public ActiveEnum Active { get; private set; }
 
     public void ToInactive()

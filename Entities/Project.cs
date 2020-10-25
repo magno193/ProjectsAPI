@@ -18,6 +18,7 @@ namespace API.Entities
       Status = StatusEnum.Pendente;
       Active = ActiveEnum.Ativo;
       IdClient = idClient;
+      Payments = new List<Payment>();
     }
 
     [Key]
@@ -31,7 +32,6 @@ namespace API.Entities
 
     [Column(TypeName = ("decimal(9,2)"))]
     public decimal Budget { get; private set; }
-    public List<Payment> Payments { get; private set; }
 
     [Column(TypeName = "tinyint")]
     public int HoursWorked { get; private set; }
@@ -40,7 +40,9 @@ namespace API.Entities
     public DateTime ExpectedDate { get; private set; }
     public StatusEnum Status { get; private set; }
     public ActiveEnum Active { get; private set; }
+    public ICollection<Payment> Payments { get; private set; }
 
+    [ForeignKey(name: "Client")]
     public Guid IdClient { get; set; }
     public Client Client { get; set; }
 
