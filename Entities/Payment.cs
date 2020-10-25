@@ -8,17 +8,18 @@ namespace API.Entities
   public class Payment
   {
     protected Payment() { }
-    public Payment(
-      decimal value,
-      Boolean portion,
-      int quantity,
-      DateTime paymentDate
-    )
+
+    public Payment(Guid id, decimal value, PaymentMethodEnum paymentMethod, bool? portion, int? quantity, DateTime paymentDate, ActiveEnum active, Guid idProject, Project project)
     {
+      Id = id;
       Value = value;
+      PaymentMethod = paymentMethod;
       Portion = portion;
       Quantity = quantity;
       PaymentDate = paymentDate;
+      Active = active;
+      IdProject = idProject;
+      Project = project;
     }
 
     [Key]

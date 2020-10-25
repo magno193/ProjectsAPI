@@ -10,19 +10,13 @@ namespace API.Entities
   {
     protected Client() { }
 
-    public Client(
-      string name,
-      string phone,
-      string description,
-      string email
-    )
+    public Client(string name, string description, string phone, string email, decimal totalPayment)
     {
       Name = name;
+      Description = description;
       Phone = phone;
       Email = email;
-      Description = description;
-      TotalPayment = 0;
-      Projects = new List<Project>();
+      TotalPayment = totalPayment;
       Active = ActiveEnum.Ativo;
     }
 
@@ -54,6 +48,13 @@ namespace API.Entities
       }
 
       Active = ActiveEnum.Inativo;
+    }
+
+    public void InputUpdate(string phone, string email, decimal totalPayment)
+    {
+      Phone = phone;
+      Email = email;
+      TotalPayment = totalPayment;
     }
   }
 }

@@ -9,25 +9,21 @@ namespace API.Entities
   public class Project
   {
     protected Project() { }
-
-    public Project(
-      string name,
-      decimal budget,
-      int hoursWorked,
-      DateTime startDate,
-      DateTime endDate,
-      DateTime expectedDate
-    )
+    public Project(Guid id, string name, string description, decimal budget, List<Payment> payments, int hoursWorked, DateTime startDate, DateTime endDate, DateTime expectedDate, StatusEnum status, ActiveEnum active, Guid idClient, Client client)
     {
+      Id = id;
       Name = name;
+      Description = description;
       Budget = budget;
-      Payments = new List<Payment>();
+      Payments = payments;
       HoursWorked = hoursWorked;
       StartDate = startDate;
       EndDate = endDate;
       ExpectedDate = expectedDate;
+      Status = status;
       Active = ActiveEnum.Ativo;
-      Status = StatusEnum.Pendente;
+      IdClient = idClient;
+      Client = client;
     }
 
     [Key]

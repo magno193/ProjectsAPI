@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Entities;
+using API.Enums;
 using API.InputModels;
 using API.Persistence;
 using API.ViewModels;
@@ -25,7 +26,7 @@ namespace API.Controllers
     {
       var clients = await _apiContext.Clients.ToListAsync();
       var clientsViewModel = clients
-        .Select(c => new ClientViewModel(c.Name, c.Phone, c.Active))
+        .Select(c => new ClientViewModel(c.Id, c.Name, c.Phone, c.Active))
         .ToList();
 
       return Ok(clientsViewModel);
@@ -40,12 +41,19 @@ namespace API.Controllers
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] Client request)
+    public async Task<IActionResult> Post([FromBody] ClientInputModel request)
     {
-      _apiContext.Clients.Add(request);
+      var client = new Client(
+        name: request.Name,
+        description: request.Description,
+        phone: request.Phone,
+        email: request.Email,
+        totalPayment: request.TotalPayment
+      );
+      await _apiContext.Clients.AddAsync(client);
       var success = await _apiContext.SaveChangesAsync() > 0;
 
-      if (success) return CreatedAtAction(nameof(GetById), request, new { id = request.Id });
+      if (success) return CreatedAtAction(nameof(GetById), client, new { id = client.Id });
       throw new Exception("Ocorreu um problema ao salvar os dados");
     }
 
@@ -55,7 +63,8 @@ namespace API.Controllers
       var client = await _apiContext.Clients.FindAsync(id);
       if (client == null) throw new Exception("Cliente não encontrado");
 
-      _apiContext.Entry(request).State = EntityState.Modified;
+      client.InputUpdate(request.Email, request.Phone, request.TotalPayment);
+
       var success = await _apiContext.SaveChangesAsync() > 0;
 
       if (success) return NoContent();

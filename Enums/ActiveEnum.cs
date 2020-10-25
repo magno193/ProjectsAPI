@@ -2,7 +2,7 @@ namespace API.Enums
 {
   public enum ActiveEnum
   {
-    Ativo = 0,
-    Inativo = 1
+    Inativo = 0,
+    Ativo = 1
   }
 }
