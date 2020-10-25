@@ -43,6 +43,7 @@ namespace API.Controllers
       throw new Exception("Ocorreu um problema ao salvar os dados");
     }
 
+    [HttpPut("{id}")]
     public async Task<IActionResult> Put(Guid id, [FromBody] Payment request)
     {
       var payment = await _apiContext.Payments.FindAsync(id);
